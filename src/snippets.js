@@ -135,17 +135,35 @@ const MyButton () =>
     {(theme) => <button style={{color: theme.color}}>}
   </ThemeContext.Consumer>;`;
 
-export const theme_hookContext =
-`  export const ThemeContext = React.createContext({ color: 'red' });
+  export const nested_renderProps =
+  `const MyButton () =>
+    <ThemeContext.Consumer>
+      {theme =>
+        <LanguageContext.Consumer>
+          {translations =>
+            <button style={{color: theme.color}}>
+              {translations.buttonText}
+            </button>
+          }
+        </LanguageContext.Consumer>
+      }
+    </ThemeContext.Consumer>;`;
 
-  const MyApp = () =>
+export const theme_hookContext =
+`  const MyApp = () =>
     <ThemeContext.Provider>
-      <Header/> <Content /> <Footer />
+      <LanguageContext.Provider>
+        <Header/> <Content /> <Footer />
+      <LanguageContext.Provider>
     </ThemeContext.Provider>;
 
   const MyButton () => {
     const theme = React.useContext(ThemeContext);
-    return <button style={{color: theme.color}}>;
+    const translations = React.useContext(LanguageContext);
+
+    return <button style={{color: theme.color}}>
+      {translations.buttonText}
+    </button>;
   };`;
 
 export const componentHookExpression =
@@ -377,11 +395,11 @@ export const useCustomHooks = (
 
 export const suspense_data_fetching = (
 `  import {unstable_createResource} from 'react-cache';
-
   const TodoResource = unstable_createResource(fetchTodo);
 
   function (props) {
-    const todo = TodoResource.read(props.id); // Suspends until data is in the cache
+    // Suspends until data is in the cache
+    const todo = TodoResource.read(props.id);
     return <li>{todo.title}</li>;
   }
 

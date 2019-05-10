@@ -41,7 +41,8 @@ import {
   lazy_loading_with_suspense,
   useCustomHooks,
   suspense_data_fetching,
-  concurrent_rendering
+  concurrent_rendering,
+  nested_renderProps
 } from './snippets';
 
 export default () => (
@@ -204,6 +205,11 @@ export default () => (
       <CodePane src={searchBox_class_string_ref} />
     </Slide>
 
+    <Slide id="deprecated-context">
+      <Heading>Deprecated context</Heading>
+      <CodePane src={theme_legacyContext} />
+    </Slide>
+
     <Slide id="deprecated-mixins">
       <Heading>Deprecated mixins</Heading>
       <CodePane src={old_mixins} />
@@ -238,11 +244,6 @@ export default () => (
       <Note>React transitioned from a mono package to a number of
       smaller more focused packages</Note>
     </Slide>
-
-    {/*<Slide id="portals">
-      <Heading>v16.0: Portals</Heading>
-      <CodePane src={portals_example} />
-    </Slide>*/}
 
     <Slide id="error-boundries">
       <Heading>v16.0: Error boundries</Heading>
@@ -302,14 +303,9 @@ export default () => (
       <Image src="images/hooks-everywhere.jpg" />
     </Slide>
 
-    <Slide id="classical-context">
-      <Heading>Deprecated context</Heading>
-      <CodePane src={theme_legacyContext} />
-    </Slide>
-
     <Slide id="render-props-context">
       <Heading>Render-prop context</Heading>
-      <CodePane src={theme_renderPropsContext} />
+      <CodePane src={nested_renderProps} />
     </Slide>
 
     <Slide id="hooks-context">
@@ -457,7 +453,7 @@ export default () => (
 
     <Slide id="thank-you">
       <Heading size={1}>Thank you!</Heading>
-      <Text>and</Text>
+      <Image src="images/NotAConf-logo.png" />
       <Heading size={1}>Enjoy the conf!</Heading>
     </Slide>
   </Deck>
