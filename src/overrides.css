@@ -1,3 +1,15 @@
+a {
+  color: black;
+}
+blockquote>span {
+  font-size: 1.75em !important;
+}
+
+.evo-note {
+  font-size: smaller !important;
+  font-style: italic !important;
+}
+
 .prism-code {
   font-size: 2em !important;
   border-left: none !important;
@@ -12,7 +24,7 @@
   color: rebeccapurple !important;
 }
 
-.token.function {
+.token.function,.token.class-name {
   color: maroon !important;
 }
 

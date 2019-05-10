@@ -15,23 +15,26 @@ export const reactDOM = (
     </button>);`);
 
 export const hooks_vs_hocs = (
-`   withSomeAspect(MyComponent); // can be replaced by a hook
-   withSomeConsideration(MyComponent); // should remain a HOC
+`  // can be replaced by a hook
+  const EnhancedComponent = addingStuffTo(MyComponent);
 
-   const withSomeConsideration = (BaseComponent) => {
-     switch (someCondition) {
-       case 'A': return <BaseComponent {...propsForA} />;
-       case 'B': return <BaseComponent {...propsForB} />;
-       default: return <BuiltInFallback />;
-     }
-   };`);
+  // cleaner as a higher-order components
+  <DataList itemTemplate={MyItem} />
+
+  // cannot be correctly implemented as a hook
+  const PureComponent = React.memo(MyComponent); // controls rendering
+  const LazyComponent = React.lazy(() => import('./MyComponent'));`);
 
 export const hooks_vs_render_props = (
-`  <AccessToSomeValue>
-    {(value) => <Display value={value} />} /* can be replaced by a hook */
+`  /* can be replaced by a hook */
+  <AccessToSomeValue>
+    {(value) => <Display value={value} />}
   </AccessToSomeValue>
 
-  <DataList itemTemplate={MyItem} /> /* should keep using render props */`);
+  /* should keep using render props */
+  <DataList renderItem={
+    (type, text) => <MyItem className={cssClassFor(type)}>{text}</MyItem>
+  } />`);
 
 export const searchBox_class_string_ref =
 `class SearchBox extends React.Component {
@@ -119,7 +122,6 @@ class MyButton extends React.Component {
     return (
       <button style={{color: this.context.theme.color}}>`;
 
-
 export const theme_renderPropsContext =
 `export const ThemeContext = React.createContext();
 
@@ -134,18 +136,17 @@ const MyButton () =>
   </ThemeContext.Consumer>;`;
 
 export const theme_hookContext =
-`export const ThemeContext =
-  React.createContext({ color: 'red' });
+`  export const ThemeContext = React.createContext({ color: 'red' });
 
-const MyApp = () =>
-  <ThemeContext.Provider>
-    <Header/> <Content /> <Footer />
-  </ThemeContext.Provider>;
+  const MyApp = () =>
+    <ThemeContext.Provider>
+      <Header/> <Content /> <Footer />
+    </ThemeContext.Provider>;
 
-const MyButton () => {
-  const theme = useContext(ThemeContext);
-  return <button style={{color: theme.color}}>;
-};`;
+  const MyButton () => {
+    const theme = React.useContext(ThemeContext);
+    return <button style={{color: theme.color}}>;
+  };`;
 
 export const componentHookExpression =
 `const SearchBox = (props) => (
@@ -171,18 +172,19 @@ export const seen_classState =
   }`;
 
 export const seen_hocState =
-`  const PrivacyWarning = withState('seen', 'setSeen', false)(
-    ({ seen, setSeen }) => {
-      if (seen) { return null; }
-      return <React.Fragment>
-        Lorem ipsum, your data are belong to us
-        <button onClick={() => setSeen(true)}>Ok</button>
-      </React.Fragment>
-    });`;
+`  const withSeenToggle = withState('seen', 'setSeen', false);
+
+  const PrivacyWarning = withSeenToggle(({ seen, setSeen }) => {
+    if (seen) { return null; }
+    return <React.Fragment>
+      Lorem ipsum, your data are belong to us
+      <button onClick={() => setSeen(true)}>Ok</button>
+    </React.Fragment>
+  });`;
 
 export const seen_hookState =
 `function PrivacyWarning() {
-  const [seen, setSeen] = useState(false);
+  const [seen, setSeen] = React.useState(false);
   if (seen) { return null; }
   return <React.Fragment>
     Lorem ipsum, your data are belong to us
@@ -222,10 +224,9 @@ export const errorBoundry_example1 =
   render() {
     return this.state.error
       ? <Error message="Oopsiee!" />
-      : <ImportantContent />;
+      : <ContentThatMightThrowAnError />;
   }
 }`;
-
 
 export const errorBoundry_hook =
 `const ErrorBoundry = () => {
@@ -279,15 +280,16 @@ export const method_side_effects =
 
 export const hook_side_effects =
 `function MyComponent(props) {
-  useEffect(() => {
+  React.useEffect(() => {
     window.title = \`Hello \${props.userName}\`;
     return () => { window.title = 'No user selected'; }
-  });
-  // ...
+  }, [props.userName]);
+
+  return <h1>Hello {props.userName}</h1>;
 }`;
 
 export const old_lifecycle_methods = (
-`  class Oldtimer extends Component {
+`  class TheseAreNowUnsafe extends Component {
     componentWillMount() {} // misused for data fetching
 
     componentWillReceiveProps() {} // causes infinate re-rendering
@@ -325,7 +327,6 @@ export const old_mixins = (
     }
   });`);
 
-
 export const more_return_types = (
 `  const HelloWorld = () => 'Hello World!';
 
@@ -339,3 +340,73 @@ export const more_return_types = (
       <li>4</li>
     </React.Fragment>
   )`);
+
+export const portals_example = (
+`  function Modal({ children }) {
+    return ReactDOM.createPortal(
+      children,
+      document.getElementById('modalRoot'),
+    );
+  }`);
+
+export const lazy_loading_with_suspense = (
+`  const ExtraContent = React.lazy(() => import('./ExtraContent'));
+
+  const Page = () => (
+    <div>
+      <MainContent />
+      <Suspense fallback={<Spinner size="small" />}>
+        <ExtraContent />
+      </Suspense>
+    </div>
+  );`);
+
+export const useCustomHooks = (
+`  function ProfileEditor = () => {
+    const user = useCurrentUser(); // customHook
+    const [avatarUrl, uploadNewAvatar] = useUserAvatar(user.id); // customHook
+
+    if (!user) { return <Error message="Please login" />; }
+
+    return (<div>
+      <div>Username: {user.name}</div>
+      <img src={avatar} />
+      <input type="file" onChange={uploadNewAvatar} />
+    </div>)
+  }`);
+
+export const suspense_data_fetching = (
+`  import {unstable_createResource} from 'react-cache';
+
+  const TodoResource = unstable_createResource(fetchTodo);
+
+  function (props) {
+    const todo = TodoResource.read(props.id); // Suspends until data is in the cache
+    return <li>{todo.title}</li>;
+  }
+
+  const App() => (<React.Suspense fallback={<Spinner />}>
+      <ul>
+        <Todo id="1" /> {/* Siblings fetch in parallel */}
+        <Todo id="2" />
+      </ul>
+    </React.Suspense>);`)
+
+
+export const data_fetching_hook = (
+`  const useFetch = (url) => {
+    const [data, setData] = React.useState(null);
+    fetch(url).then(setData);
+
+    return data;
+  };`);
+
+export const concurrent_rendering = (
+` const App = () => (
+    <div>
+      <ImportantInteractiveContent />
+      <React.unstable_ConcurrentMode> /* API not finalized */
+        <LowerPriorityContent />
+      </React.unstable_ConcurrentMode>
+    </div>
+  );`);

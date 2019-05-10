@@ -55,3 +55,7 @@ export const Marquee = ({ text }) => (
   // eslint-disable-next-line
   <marquee>{text}</marquee>
 );
+
+export const Note = ({ children }) => (
+  <Text className="evo-note">{children}</Text>
+);

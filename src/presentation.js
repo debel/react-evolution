@@ -5,8 +5,9 @@ import {
   Cite,
   Code,
   Image,
-  ListItem,
+  Link,
   List,
+  ListItem,
   Quote,
   Slide,
   Text,
@@ -17,11 +18,11 @@ import {
   Deck,
   Heading,
   Marquee,
+  Note,
 } from './utils';
 
 import {
   imperativeDOM,
-  reactDOM,
   hooks_vs_hocs,
   hooks_vs_render_props,
   method_side_effects,
@@ -36,13 +37,17 @@ import {
   seen_hookState,
   theme_legacyContext,
   theme_renderPropsContext,
-  theme_hookContext
+  theme_hookContext,
+  lazy_loading_with_suspense,
+  useCustomHooks,
+  suspense_data_fetching,
+  concurrent_rendering
 } from './snippets';
 
 export default () => (
   <Deck>
     <Slide id="title">
-      <Image src="/images/evolution.png" />
+      <Image src="images/evolution.png" />
       <Heading size={1} fit lineHeight={1}>
         The evolution of React APIs
       </Heading>
@@ -75,9 +80,8 @@ export default () => (
 
     <Slide id="lets-get-started">
       <Image src="images/NotAConf-logo.png" />
-      <Text>Let's get this</Text>
+      <Text>A big <span style={{ fontWeight: 'bold' }}>thank you</span> to the organizers of</Text>
       <Heading>&lt;React.Not.A.Conf /&gt;</Heading>
-      <Text>started!</Text>
     </Slide>
 
     <Slide id="html">
@@ -108,6 +112,10 @@ export default () => (
       <CodePane lang="jsx" theme="external" source={imperativeDOM} />
     </Slide>
 
+    <Slide id="jquery">
+      <Image src="images/jquery.jpg" />
+    </Slide>
+
     <Slide id="react">
       <Image width="20%" src="images/love-react-2.png" />
       <Heading>But then came React</Heading>
@@ -116,33 +124,19 @@ export default () => (
       <Marquee text="Your experience may vary, BUT you are at a React Conf so... lol?! wtf? ftw!" />
     </Slide>
 
-    <Slide id="react-example">
+    {/*<Slide id="react-example">
       <CodePane src={reactDOM} />
-    </Slide>
+    </Slide>*/}
 
     <Slide id="evolution">
       <Heading>Evolution</Heading>
       <List>
         <ListItem>Small change over time</ListItem>
         <ListItem>Emergent non-directed change</ListItem>
-        <ListItem>Progress through error</ListItem>
-        <ListItem>Survival of the fittest</ListItem>
+        <ListItem>No discernible goals</ListItem>
+        <ListItem>No notion of elegance</ListItem>
       </List>
     </Slide>
-
-    {/*
-    <Slide id="evolution-vs-randomness">
-      <Heading>evolution != randomness</Heading>
-    </Slide>
-
-    <Slide id="evolution-vs-progress">
-      <Heading>evolution != progress</Heading>
-    </Slide>
-
-    <Slide id="evolution-vs-design">
-     <Heading>evolution != design</Heading>
-    </Slide>
-    */}
 
     <Slide id="design">
       <Heading>Design</Heading>
@@ -179,14 +173,25 @@ export default () => (
         <ListItem>Reproducible rendering</ListItem>
         <ListItem>Unidirectional data-flow</ListItem>
         <ListItem>Rich development toolset</ListItem>
-        <ListItem>Backwards compatible APIs</ListItem>
+        <ListItem>Backwards compatibility</ListItem>
         <ListItem>Long-term roadmap</ListItem>
       </List>
     </Slide>
 
+    <Slide id="quote-1">
+      <BlockQuote>
+        <Quote>
+          Great APIs not only let you fall into a pit of success, but help you stay there.
+          <br />
+          They’re optimized for change.
+        </Quote>
+        <Cite>Dan Abramov @ <Link href="https://overreacted.io/optimized-for-change/">overreacted.io</Link></Cite>
+      </BlockQuote>
+    </Slide>
+
     <Slide id="depreciation">
       <Heading>Some features have been deprecated</Heading>
-      <Text textSize="smaller" style={{ fontStyle: 'italic' }}>(But nothing is ever really gone)</Text>
+      <Note>(But nothing is ever really gone)</Note>
     </Slide>
 
     <Slide id="deprecated-lifecycle-methods">
@@ -206,22 +211,11 @@ export default () => (
 
     <Slide id="new-features">
       <Heading>So many new features</Heading>
-      <Text>But old project can (usually) upgrade with minimal effort</Text>
-    </Slide>
-
-    <Slide id="modularity">
-      <Heading>Single responsibility</Heading>
-      <Text>React went from a mono package to a number of
-      smaller more focused packages</Text>
-    </Slide>
-
-    <Slide id="elements">
-      <Heading>Small improvements</Heading>
-      <CodePane src={more_return_types} />
+      <Note>But old project can (usually) upgrade with minimal effort</Note>
     </Slide>
 
     <Slide id="types">
-      <Heading>Many ways to make React typesafe</Heading>
+      <Heading>Type Safety</Heading>
       <List>
         <ListItem>Prop types</ListItem>
         <ListItem>Flow</ListItem>
@@ -230,21 +224,49 @@ export default () => (
       </List>
     </Slide>
 
+    <Slide id="tooling">
+      <Heading>Dev Tools</Heading>
+      <List>
+        <ListItem>DevTools Plugin</ListItem>
+        <ListItem>&lt;Profiler&gt;</ListItem>
+        <ListItem>&lt;StrictMode&gt;</ListItem>
+      </List>
+    </Slide>
+
+    <Slide id="modularity">
+      <Heading>v15.6: Single responsibility</Heading>
+      <Note>React transitioned from a mono package to a number of
+      smaller more focused packages</Note>
+    </Slide>
+
+    {/*<Slide id="portals">
+      <Heading>v16.0: Portals</Heading>
+      <CodePane src={portals_example} />
+    </Slide>*/}
+
     <Slide id="error-boundries">
-      <Heading>Error boundries</Heading>
+      <Heading>v16.0: Error boundries</Heading>
       <CodePane src={errorBoundry_example1} />
     </Slide>
 
-    <Slide id="portals">
-      portals
+    <Slide id="elements">
+      <Heading>v16.2: Fragments</Heading>
+      <CodePane src={more_return_types} />
+    </Slide>
+
+    <Slide id="new-context-api">
+      <Heading>v16.3: New Context API</Heading>
+      <CodePane src={theme_renderPropsContext} />
+    </Slide>
+
+    <Slide id="lazy-loading">
+      <Heading>v16.6: Lazy loading with Suspense</Heading>
+      <CodePane src={lazy_loading_with_suspense} />
     </Slide>
 
     <Slide id="enter-hooks">
+      <Heading>v16.8: Hooks</Heading>
       <Image src="images/we-want-hooks.jpg" />
-    </Slide>
-
-    <Slide id="enter-hooks-1">
-      <Image src="images/hooks-only-pattern.jpg" />
     </Slide>
 
     <Slide id="classical-effects">
@@ -257,19 +279,8 @@ export default () => (
       <CodePane src={hook_side_effects} />
     </Slide>
 
-    <Slide id="punctuated-equilibrium">
-      <Heading>Punctuated Equilibrium</Heading>
-      <Text>Evolution doesn't happen uniformly and gradually</Text>
-      <Text>Specific events have larger evolutionary significance</Text>
-    </Slide>
-
-    <Slide id="patterns">
-      <Heading>Patterns are just tools</Heading>
-      <List>
-        <ListItem>Higher-order components</ListItem>
-        <ListItem>Render props</ListItem>
-        <ListItem>Hooks</ListItem>
-      </List>
+    <Slide id="hooks-everywhere-2">
+      <Image src="images/hooks-morty.jpg" />
     </Slide>
 
     <Slide id="classical-state">
@@ -278,13 +289,17 @@ export default () => (
     </Slide>
 
     <Slide id="hoc-state">
-      <Heading>HOC State</Heading>
+      <Heading>HOC state</Heading>
       <CodePane src={seen_hocState} />
     </Slide>
 
     <Slide id="hooks-state">
       <Heading>Hooks state</Heading>
       <CodePane src={seen_hookState} />
+    </Slide>
+
+    <Slide id="hooks-everywhere">
+      <Image src="images/hooks-everywhere.jpg" />
     </Slide>
 
     <Slide id="classical-context">
@@ -302,36 +317,38 @@ export default () => (
       <CodePane src={theme_hookContext} />
     </Slide>
 
-    <Slide id="the-power-of-hooks">
-      <Heading>The power of hooks</Heading>
-      <List>
-        <ListItem>Reduce unnecessary component nesting</ListItem>
-        <ListItem>Improve logic sharing and code reuse</ListItem>
-        <ListItem>Improve performance and readability</ListItem>
-      </List>
-    </Slide>
-
-    <Slide id="hooks-vs-hoc">
-      <Heading>Hooks vs higer-order components</Heading>
-      <Text>HOCs can dictate rendering</Text>
-      <CodePane src={hooks_vs_hocs} />
-    </Slide>
-
-    <Slide id="hooks-vs-render-props">
-      <Heading>Hooks vs render props</Heading>
-      <CodePane src={hooks_vs_render_props} />
-    </Slide>
-
-    <Slide id="hooks-everywhere-2">
-      <Image src="images/hooks-morty.jpg" />
-    </Slide>
-
     <Slide id="hooks-all-the-things">
       <Image src="images/hooks-all-the-things.jpg" />
     </Slide>
 
-    <Slide id="hooks-everywhere">
-      <Image src="images/hooks-everywhere.jpg" />
+    <Slide id="quote-hooks">
+      <BlockQuote>
+        <Quote>
+          Hooks are like functional mixins that let you create and compose your own abstractions.
+        </Quote>
+        <Cite>Dan Abramov @ <Link href="https://overreacted.io/why-do-hooks-rely-on-call-order/">overreacted.io</Link></Cite>
+      </BlockQuote>
+    </Slide>
+
+    <Slide id="hooks-composition">
+      <Heading>Custom hooks:<br/> The new mixins</Heading>
+      <Note>decorators wouldn't have allowed for hooks data passing</Note>
+      <CodePane src={useCustomHooks} />
+    </Slide>
+
+    <Slide id="the-power-of-hooks">
+      <Heading>The power of hooks</Heading>
+      <List>
+        <ListItem>Reduce unnecessary component nesting</ListItem>
+        <ListItem>Reduce unnecessary rendering</ListItem>
+        <ListItem>Improve logic sharing and code reuse</ListItem>
+        <ListItem>Improve performance and readability</ListItem>
+        <ListItem>Enable a more functional style</ListItem>
+      </List>
+    </Slide>
+
+    <Slide id="enter-hooks-1">
+      <Image src="images/hooks-only-pattern.jpg" />
     </Slide>
 
     <Slide id="hooks-everywhere-3">
@@ -343,119 +360,94 @@ export default () => (
     </Slide>
 
     <Slide id="not-so-fast-hooks">
-      <Image src="images/not-so-fast-hooks.jpg" />
-    </Slide>
-
-    <Slide id="not-so-fast-hooks-1">
-      <Image src="images/not-so-fast-hooks-2.jpg" />
+      <Image src="images/not-so-fast-hooks-3.jpg" />
     </Slide>
 
     <Slide id="why-cant-x-be-a-hook">
       <Heading>Hooks cannot replace everything</Heading>
       <List>
         <ListItem>ContextProvider</ListItem>
-        <ListItem>ErrorBoundries</ListItem>
-        <ListItem>Top-level APIs</ListItem>
+        <ListItem>Error boundries</ListItem>
+        <ListItem>React.lazy</ListItem>
+        <ListItem>And more</ListItem>
       </List>
+    </Slide>
+
+    <Slide id="patterns">
+      <Heading>Patterns are just tools</Heading>
+      <List>
+        <ListItem>Higher-order components</ListItem>
+        <ListItem>Container components</ListItem>
+        <ListItem>Render props</ListItem>
+        <ListItem>Hooks</ListItem>
+      </List>
+    </Slide>
+
+    <Slide id="hooks-vs-hoc">
+      <Heading>Hooks vs HOCs</Heading>
+      <Note>You can delegate control to a HOC</Note>
+      <CodePane src={hooks_vs_hocs} />
+    </Slide>
+
+    <Slide id="hooks-vs-render-props">
+      <Heading>Hooks vs render props</Heading>
+      <Note>Render props allow a component to delegate to you</Note>
+      <CodePane src={hooks_vs_render_props} />
     </Slide>
 
     <Slide id="why-cant-x-be-a-hook-2">
-      <Heading>Meaning in the tree</Heading>
+      <Heading fit>Special containers can't be hooks</Heading>
+      <Note>
+        They have an explicit meaning in the tree structure
+        (i.e. their position affects how errors/bailouts/context propagate up or down)
+      </Note>
       <List>
-        <ListItem>&lt;StrictMode&gt;</ListItem>
-        <ListItem>&lt;ConcurrentMode&gt;</ListItem>
+        <ListItem>&lt;Suspense&gt;</ListItem>
+        <ListItem>Error boundries</ListItem>
         <ListItem>&lt;ContextProvider&gt;</ListItem>
+        <ListItem>&lt;ConcurrentMode&gt;</ListItem>
       </List>
     </Slide>
 
-    <Slide id="error-boundries-cant-be-hooks">
-      <Heading>Error boundries can't be hooks</Heading>
-    </Slide>
-
-    <Slide id="top-level-apis-1">
-      <Heading>Top-level APIs can't be hooks</Heading>
-    </Slide>
-
-    <Slide id="hooks-vs-annotations">
-    </Slide>
-
-    <Slide id="top-level-apis-vs-annotations">
-    </Slide>
-
-    <Slide id="components">
-
-    </Slide>
-
-    <Slide id="composition">
-    </Slide>
-
-    <Slide id="refs">
-    </Slide>
-
-    <Slide id="effects">
-    </Slide>
-
-    <Slide id="context">
-    </Slide>
-
-    <Slide id="redux">
+    <Slide id="not-hooks-quote">
+      <Heading></Heading>
+        <BlockQuote>
+          <Quote>
+            A hook should not be able to "hide"
+            these without them being reflected in the tree structure.
+          </Quote>
+          <Cite>Dan Abramov @ <Link href="https://github.com/facebook/react/issues/14347#issuecomment-456861860">github.com</Link></Cite>
+        </BlockQuote>
     </Slide>
 
     <Slide id="roadmap">
+      <Heading>What comes next?</Heading>
+      <List>
+        <ListItem>ConcurrentMode - async rendering</ListItem>
+        <ListItem>Suspense - "sync" data fetching</ListItem>
+      </List>
+      <Note>You can experiment with these today!</Note>
     </Slide>
 
     <Slide id="concurrent-rendering">
       <Heading>Async rendering</Heading>
+      <Note>Allows rendering to happen in multiple event-loop ticks</Note>
+      <CodePane src={concurrent_rendering} />
     </Slide>
 
-    <Slide id="suspense">
+    <Slide id="data-suspense">
       <Heading>"Sync" data fetching</Heading>
+      <CodePane src={suspense_data_fetching} />
     </Slide>
 
-    <Slide id="server-side">
-
-    </Slide>
-
-    <Slide id="testing">
-      jest
-    </Slide>
-
-    {/*
-    <Slide id="hoc">
-      the hoc dictates the interface
-    </Slide>
-
-    <Slide id="render-props">
-      for when you need control
-    </Slide>
-
-    <Slide id="hooks">
-      A simple yet elegant design
-    </Slide>
-
-    <Slide id="hook-2">
-      Why functions and not annotations
-
-      Why the order matters
-    </Slide>
-
-    <Slide id="hooks-3">
-      Why is X not a hook
-
-      Not everything can be expressed with a hook
-    </Slide>
-    */}
-    <Slide id="top-level-apis-2">
-    </Slide>
-
-    <Slide id="should-it-change">
-      PureComponent, React.memo, useMemo and when should a component re-render
-    </Slide>
-
-    <Slide id="quote">
+    <Slide id="quote-2">
       <BlockQuote>
-        <Quote>Example Quote</Quote>
-        <Cite>Author</Cite>
+        <Quote>
+          Great APIs not only let you fall into a pit of success, but help you stay there.
+          <br />
+          They’re optimized for change.
+        </Quote>
+        <Cite>Dan Abramov @ <Link href="https://overreacted.io/optimized-for-change/">overreacted.io</Link></Cite>
       </BlockQuote>
     </Slide>
 
@@ -465,6 +457,7 @@ export default () => (
 
     <Slide id="thank-you">
       <Heading size={1}>Thank you!</Heading>
+      <Text>and</Text>
       <Heading size={1}>Enjoy the conf!</Heading>
     </Slide>
   </Deck>
