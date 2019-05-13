@@ -125,10 +125,6 @@ export default () => (
       <Marquee text="Your experience may vary, BUT you are at a React Conf so... lol?! wtf? ftw!" />
     </Slide>
 
-    {/*<Slide id="react-example">
-      <CodePane src={reactDOM} />
-    </Slide>*/}
-
     <Slide id="evolution">
       <Heading>Evolution</Heading>
       <List>
