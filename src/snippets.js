@@ -150,14 +150,7 @@ const MyButton () =>
     </ThemeContext.Consumer>;`;
 
 export const theme_hookContext =
-`  const MyApp = () =>
-    <ThemeContext.Provider>
-      <LanguageContext.Provider>
-        <Header/> <Content /> <Footer />
-      <LanguageContext.Provider>
-    </ThemeContext.Provider>;
-
-  const MyButton () => {
+` const MyButton () => {
     const theme = React.useContext(ThemeContext);
     const translations = React.useContext(LanguageContext);
 

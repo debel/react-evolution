@@ -53,7 +53,7 @@ export default () => (
         The evolution of React APIs
       </Heading>
       <Text textAlign="right">
-        &lt;React.Not.A.Conf /&gt; <br/>
+        js.talks(2019);<br/>
         Mihail Mikov <br/>
         @debelbot <br/>
       </Text>
@@ -80,9 +80,8 @@ export default () => (
     </Slide>
 
     <Slide id="lets-get-started">
-      <Image src="images/NotAConf-logo.png" />
       <Text>A big <span style={{ fontWeight: 'bold' }}>thank you</span> to the organizers of</Text>
-      <Heading>&lt;React.Not.A.Conf /&gt;</Heading>
+      <Image src="images/jstalks.png" />
     </Slide>
 
     <Slide id="html">
@@ -110,6 +109,7 @@ export default () => (
     </Slide>
 
     <Slide id="dom-example">
+      <Heading size={4}>DOM Problems</Heading>
       <CodePane lang="jsx" theme="external" source={imperativeDOM} />
     </Slide>
 
@@ -122,17 +122,29 @@ export default () => (
       <Heading>But then came React</Heading>
       <Text>And React was declarative</Text>
       <Text>And everything has been perfect ever since*</Text>
-      <Marquee text="Your experience may vary, BUT you are at a React Conf so... lol?! wtf? ftw!" />
+      <Marquee text="Your experience may vary, but what are you going to use Vue or Angular?!" />
     </Slide>
 
-    <Slide id="evolution">
-      <Heading>Evolution</Heading>
-      <List>
-        <ListItem>Small change over time</ListItem>
-        <ListItem>Emergent non-directed change</ListItem>
-        <ListItem>No discernible goals</ListItem>
-        <ListItem>No notion of elegance</ListItem>
-      </List>
+    <Slide id="pit-of-success">
+      <BlockQuote>
+        <Quote>
+          "The Pit of Success" is when developers
+          simply fall into winning practices
+          by using a platform or a framework.
+        </Quote>
+        <Cite>Jeff Atwood @ <Link href="https://blog.codinghorror.com/falling-into-the-pit-of-success/">codinghorror.com</Link></Cite>
+      </BlockQuote>
+    </Slide>
+
+    <Slide id="quote-1">
+      <BlockQuote>
+        <Quote>
+          Great APIs not only let you fall into a pit of success, but help you stay there.
+          <br />
+          They’re optimized for change.
+        </Quote>
+        <Cite>Dan Abramov @ <Link href="https://overreacted.io/optimized-for-change/">overreacted.io</Link></Cite>
+      </BlockQuote>
     </Slide>
 
     <Slide id="design">
@@ -160,6 +172,16 @@ export default () => (
       </List>
     </Slide>
 
+    <Slide id="evolution">
+      <Heading>Evolution</Heading>
+      <List>
+        <ListItem>Small change over time</ListItem>
+        <ListItem>Emergent non-directed change</ListItem>
+        <ListItem>No discernible goals</ListItem>
+        <ListItem>No notion of elegance</ListItem>
+      </List>
+    </Slide>
+
     <Slide id="stability">
       <Heading>Evolution is about stability</Heading>
     </Slide>
@@ -173,17 +195,6 @@ export default () => (
         <ListItem>Backwards compatibility</ListItem>
         <ListItem>Long-term roadmap</ListItem>
       </List>
-    </Slide>
-
-    <Slide id="quote-1">
-      <BlockQuote>
-        <Quote>
-          Great APIs not only let you fall into a pit of success, but help you stay there.
-          <br />
-          They’re optimized for change.
-        </Quote>
-        <Cite>Dan Abramov @ <Link href="https://overreacted.io/optimized-for-change/">overreacted.io</Link></Cite>
-      </BlockQuote>
     </Slide>
 
     <Slide id="depreciation">
@@ -402,14 +413,13 @@ export default () => (
     </Slide>
 
     <Slide id="not-hooks-quote">
-      <Heading></Heading>
-        <BlockQuote>
-          <Quote>
-            A hook should not be able to "hide"
-            these without them being reflected in the tree structure.
-          </Quote>
-          <Cite>Dan Abramov @ <Link href="https://github.com/facebook/react/issues/14347#issuecomment-456861860">github.com</Link></Cite>
-        </BlockQuote>
+      <BlockQuote>
+        <Quote>
+          A hook should not be able to "hide"
+          effects without them being reflected in the tree structure.
+        </Quote>
+        <Cite>Dan Abramov @ <Link href="https://github.com/facebook/react/issues/14347#issuecomment-456861860">github.com</Link></Cite>
+      </BlockQuote>
     </Slide>
 
     <Slide id="roadmap">
@@ -449,7 +459,7 @@ export default () => (
 
     <Slide id="thank-you">
       <Heading size={1}>Thank you!</Heading>
-      <Image src="images/NotAConf-logo.png" />
+      <Image src="images/jstalks.png" />
       <Heading size={1}>Enjoy the conf!</Heading>
     </Slide>
   </Deck>

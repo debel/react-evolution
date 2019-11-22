@@ -53,7 +53,7 @@ export const CodePane = ({ src, ...props }) => (
 
 export const Marquee = ({ text }) => (
   // eslint-disable-next-line
-  <marquee>{text}</marquee>
+  <marquee scrolldelay="60">{text}</marquee>
 );
 
 export const Note = ({ children }) => (
